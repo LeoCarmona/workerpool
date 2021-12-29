@@ -12,6 +12,8 @@ type (
 		Name() string
 	}
 
+	TaskFn func() (interface{}, error)
+
 	TaskResult interface {
 		Name() string
 		Value() interface{}
@@ -24,5 +26,9 @@ type (
 )
 
 func New(name string, workers int, queue int) WorkerPool {
+	return nil
+}
+
+func NewTask(name string, fn TaskFn) Task {
 	return nil
 }
