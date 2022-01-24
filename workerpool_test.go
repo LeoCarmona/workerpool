@@ -291,9 +291,9 @@ func TestWorkerPool(t *testing.T) {
 			})
 
 			// task duration
-			taskDuration := 50 * time.Millisecond
-			taskDurationMin := taskDuration - 2*time.Millisecond // max of 2 milliseconds of overhead
-			taskDurationMax := taskDuration + 2*time.Millisecond // max of 2 milliseconds of overhead
+			taskDuration := 25 * time.Millisecond
+			taskDurationMin := taskDuration - 3*time.Millisecond // max of 3 milliseconds of overhead
+			taskDurationMax := taskDuration + 3*time.Millisecond // max of 3 milliseconds of overhead
 
 			// timeout for non-blocking submissions
 			submitTimeout := 200 * time.Microsecond
@@ -310,8 +310,8 @@ func TestWorkerPool(t *testing.T) {
 				waitTimeout = taskDuration / 2
 			}
 
-			waitTimeoutMin := waitTimeout - 1*time.Millisecond
-			waitTimeoutMax := waitTimeout + 1*time.Millisecond
+			waitTimeoutMin := waitTimeout - 2*time.Millisecond
+			waitTimeoutMax := waitTimeout + 2*time.Millisecond
 
 			// task results
 			var submittedAt time.Time
@@ -426,9 +426,9 @@ func TestWorkerPool(t *testing.T) {
 			// test try submissions
 			if !testCase.mustSubmit {
 				// keep the queue and workers busy
-				for i := 0; i < wp.QueueCapacity()+wp.MaxWorkers()+2; i++ {
+				for i := 0; i < wp.QueueCapacity()+wp.MaxWorkers()+1; i++ {
 					wp.TrySubmit(func() {
-						time.Sleep(2 * time.Second)
+						time.Sleep(50 * time.Millisecond)
 					})
 				}
 
