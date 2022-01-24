@@ -107,40 +107,50 @@ func (wp *WorkerPool) Submit(task func()) {
 	wp.submit(task, true, false, nil)
 }
 
+// SubmitAndWait sends a task to run asynchronous in the WorkerPool and waits for it to complete.
 func (wp *WorkerPool) SubmitAndWait(task func()) {
 	wp.submit(task, true, true, nil)
 }
 
+// SubmitAndWaitWithTimeout sends a task to run asynchronous in the WorkerPool and waits for it to complete or until the defined timeout.
 func (wp *WorkerPool) SubmitAndWaitWithTimeout(timeout time.Duration, task func()) (finished bool, wait <-chan struct{}) {
 	return wp.SubmitAndWaitWithDeadline(time.Now().Add(timeout), task)
 }
 
+// SubmitAndWaitWithDeadline sends a task to run asynchronous in the WorkerPool and waits for it to complete or until the defined deadline.
 func (wp *WorkerPool) SubmitAndWaitWithDeadline(deadline time.Time, task func()) (finished bool, wait <-chan struct{}) {
 	_, finished, wait = wp.submit(task, true, true, &deadline)
 	return
 }
 
 // TrySubmit Attempts to send a task to run asynchronous in the WorkerPool.
-// If the queue has capacity, the task runs asynchronously and returns true. Otherwise, the task will not run and will return false.
+// If the queue has capacity or have available workers, the task will run asynchronously and returns true. Otherwise, the task will not run and will return false.
 func (wp *WorkerPool) TrySubmit(task func()) (submitted bool) {
 	submitted, _, _ = wp.submit(task, false, false, nil)
 	return
 }
 
+// TrySubmitAndWait Attempts to send a task to run asynchronous in the WorkerPool and waits for it to complete.
+// If the queue has capacity or have available workers, the task will run asynchronously and returns true. Otherwise, the task will not run and will return false.
 func (wp *WorkerPool) TrySubmitAndWait(task func()) (submitted bool) {
 	submitted, _, _ = wp.submit(task, false, true, nil)
 	return
 }
 
+// TrySubmitAndWaitWithTimeout Attempts to send a task to run asynchronous in the WorkerPool and waits for it to complete or until the defined timeout.
+// If the queue has capacity or have available workers, the task will run asynchronously and returns true. Otherwise, the task will not run and will return false.
 func (wp *WorkerPool) TrySubmitAndWaitWithTimeout(timeout time.Duration, task func()) (submitted bool, finished bool, wait <-chan struct{}) {
 	return wp.TrySubmitAndWaitWithDeadline(time.Now().Add(timeout), task)
 }
 
+// TrySubmitAndWaitWithDeadline Attempts to send a task to run asynchronous in the WorkerPool and waits for it to complete or until the defined deadline.
+// If the queue has capacity or have available workers, the task will run asynchronously and returns true. Otherwise, the task will not run and will return false.
 func (wp *WorkerPool) TrySubmitAndWaitWithDeadline(deadline time.Time, task func()) (submitted bool, finished bool, wait <-chan struct{}) {
 	submitted, finished, wait = wp.submit(task, false, true, &deadline)
 	return
 }
 
+// Burst will create the specified number of workers even above the WorkerPool limit (WorkerPool.MaxWorkers).
 func (wp *WorkerPool) Burst(workers int) {
 	if workers < 1 {
 		return
@@ -149,6 +159,7 @@ func (wp *WorkerPool) Burst(workers int) {
 	wp.createWorkers(workers)
 }
 
+// ScaleUp will create the specified number of workers until the WorkerPool limit (WorkerPool.MaxWorkers).
 func (wp *WorkerPool) ScaleUp(workers int) int {
 	if workers < 1 {
 		return 0
@@ -167,6 +178,7 @@ func (wp *WorkerPool) ScaleUp(workers int) int {
 	return workers
 }
 
+// ScaleUp will purge the specified number of workers until the WorkerPool limit (WorkerPool.MinWorkers).
 func (wp *WorkerPool) ScaleDown(workers int) int {
 	if workers < 1 {
 		return 0
@@ -188,6 +200,7 @@ func (wp *WorkerPool) ScaleDown(workers int) int {
 	return workers
 }
 
+// ReleaseIdleWorkers will purge all idle workers.
 func (wp *WorkerPool) ReleaseIdleWorkers() int {
 	workersToBePurged := wp.metrics.IdleWorkers() - wp.minWorkers
 	if workersToBePurged < 1 {
@@ -201,6 +214,7 @@ func (wp *WorkerPool) ReleaseIdleWorkers() int {
 	return workersToBePurged
 }
 
+// Stop will stop the worker and return.
 func (wp *WorkerPool) Stop() {
 	wp.stopOnce.Do(func() {
 		wp.stopped = true
@@ -208,15 +222,18 @@ func (wp *WorkerPool) Stop() {
 	})
 }
 
+// StopAndWait will stop the worker and return when all workers finished their tasks.
 func (wp *WorkerPool) StopAndWait() {
 	wp.Stop()
 	wp.workerWG.Wait()
 }
 
+// StopAndWaitWithTimeout will stop the worker and return when all workers finished their tasks or until timeout.
 func (wp *WorkerPool) StopAndWaitWithTimeout(timeout time.Duration) (finished bool, wait <-chan struct{}) {
 	return wp.StopAndWaitWithDeadline(time.Now().Add(timeout))
 }
 
+// StopAndWaitWithDeadline will stop the worker and return when all workers finished their tasks or until deadline.
 func (wp *WorkerPool) StopAndWaitWithDeadline(deadline time.Time) (finished bool, wait <-chan struct{}) {
 	wp.Stop()
 
