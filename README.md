@@ -11,7 +11,7 @@
 ## Installation
 To install this library in your project, do you need to run:
 ```
-go get github.com/leocarmona/workerpool@1.0.0
+go get github.com/leocarmona/workerpool@v1.0.0
 ```
 
 ## How to use
