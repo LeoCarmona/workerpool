@@ -1,6 +1,6 @@
 # Golang WorkerPool
 
-![Build status](https://github.com/github/docs/actions/workflows/main.yml/badge.svg?event=push)
+![Build status](https://github.com/leocarmona/workerpool/actions/workflows/main.yaml/badge.svg)
 ![GitHub go.mod Go version](https://img.shields.io/github/go-mod/go-version/leocarmona/workerpool)
 <a title="Release" target="_blank" href="https://github.com/leocarmona/workerpool/releases"><img src="https://img.shields.io/github/v/release/leocarmona/workerpool"></a>
 [![GoDoc](https://pkg.go.dev/badge/github.com/leocarmona/workerpool)](https://pkg.go.dev/github.com/leocarmona/workerpool)
