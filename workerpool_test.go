@@ -408,7 +408,6 @@ func TestWorkerPool(t *testing.T) {
 
 			if testCase.hasPanic {
 				// recovered from default panic
-
 				// now, check custom panic handler
 				wp.SetPanicHandler(func(pErr interface{}) {
 					panicErr = pErr
