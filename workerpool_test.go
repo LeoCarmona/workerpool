@@ -296,7 +296,7 @@ func TestWorkerPool(t *testing.T) {
 			taskDurationMax := taskDuration + 3*time.Millisecond // max of 3 milliseconds of overhead
 
 			// timeout for non-blocking submissions
-			submitTimeout := 200 * time.Microsecond
+			submitTimeout := 1 * time.Millisecond
 
 			// test panic
 			expectedPanicErr := fmt.Errorf("panic error on %s", testCase.name)
