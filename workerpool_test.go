@@ -291,9 +291,9 @@ func TestWorkerPool(t *testing.T) {
 			})
 
 			// task duration
-			taskDuration := 30 * time.Millisecond
-			taskDurationMin := taskDuration - 5*time.Millisecond // max of 3 milliseconds of overhead
-			taskDurationMax := taskDuration + 5*time.Millisecond // max of 3 milliseconds of overhead
+			taskDuration := 50 * time.Millisecond
+			taskDurationMin := taskDuration - 20*time.Millisecond // max of 20 milliseconds of overhead
+			taskDurationMax := taskDuration + 20*time.Millisecond // max of 20 milliseconds of overhead
 
 			// timeout for non-blocking submissions
 			submitTimeout := 1 * time.Millisecond
@@ -310,8 +310,8 @@ func TestWorkerPool(t *testing.T) {
 				waitTimeout = taskDuration / 2
 			}
 
-			waitTimeoutMin := waitTimeout - 5*time.Millisecond
-			waitTimeoutMax := waitTimeout + 5*time.Millisecond
+			waitTimeoutMin := waitTimeout - 20*time.Millisecond
+			waitTimeoutMax := waitTimeout + 20*time.Millisecond
 
 			// task results
 			var submittedAt time.Time
