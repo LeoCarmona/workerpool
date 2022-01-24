@@ -19,85 +19,85 @@ go get github.com/leocarmona/workerpool@1.0.0
 package main
 
 import (
-	"fmt"
-	"github.com/leocarmona/workerpool"
-	"runtime/debug"
-	"time"
+   "fmt"
+   "github.com/leocarmona/workerpool"
+   "runtime/debug"
+   "time"
 )
 
 func main() {
-	wp := workerpool.New("io", &workerpool.Settings{
-		MinWorkers:  64,
-		MaxWorkers:  256,
-		IdleTimeout: 15 * time.Second,
-		UpScaling:   4,
-		DownScaling: 2,
-		Queue:       4096,
-		PanicHandler: func(panicErr interface{}) {
-			fmt.Printf("Worker recovered from a panic: %v\nStack trace: %s\n", panicErr, string(debug.Stack()))
-		},
-	})
+   wp := workerpool.New("io", &workerpool.Settings{
+      MinWorkers:  64,
+      MaxWorkers:  256,
+      IdleTimeout: 15 * time.Second,
+      UpScaling:   4,
+      DownScaling: 2,
+      Queue:       4096,
+      PanicHandler: func(panicErr interface{}) {
+         fmt.Printf("Worker recovered from a panic: %v\nStack trace: %s\n", panicErr, string(debug.Stack()))
+      },
+   })
 
-	task := func() { fmt.Println("hi") }
-	timeout := time.Second
-	deadline := time.Now().Add(timeout)
+   task := func() { fmt.Println("hi") }
+   timeout := time.Second
+   deadline := time.Now().Add(timeout)
 
-	// Executions
-	wp.Submit(task)
-	wp.SubmitAndWait(task)
-	wp.SubmitAndWaitWithTimeout(timeout, task)
-	wp.SubmitAndWaitWithDeadline(deadline, task)
+   // Executions
+   wp.Submit(task)
+   wp.SubmitAndWait(task)
+   wp.SubmitAndWaitWithTimeout(timeout, task)
+   wp.SubmitAndWaitWithDeadline(deadline, task)
 
-	wp.TrySubmit(task)
-	wp.TrySubmitAndWait(task)
-	wp.TrySubmitAndWaitWithTimeout(timeout, task)
-	wp.TrySubmitAndWaitWithDeadline(deadline, task)
+   wp.TrySubmit(task)
+   wp.TrySubmitAndWait(task)
+   wp.TrySubmitAndWaitWithTimeout(timeout, task)
+   wp.TrySubmitAndWaitWithDeadline(deadline, task)
 
-	// Manage Workers/Goroutines
-	wp.Burst(1)
-	wp.ScaleUp(1)
-	wp.ScaleDown(1)
-	wp.ReleaseIdleWorkers()
+   // Manage Workers/Goroutines
+   wp.Burst(1)
+   wp.ScaleUp(1)
+   wp.ScaleDown(1)
+   wp.ReleaseIdleWorkers()
 
-	wp.Stop()
-	wp.StopAndWait()
-	wp.StopAndWaitWithTimeout(timeout)
-	wp.StopAndWaitWithDeadline(deadline)
+   wp.Stop()
+   wp.StopAndWait()
+   wp.StopAndWaitWithTimeout(timeout)
+   wp.StopAndWaitWithDeadline(deadline)
 
-	wp.Stopped()
+   wp.Stopped()
 
-	// Metrics
-	wp.Metrics().RunningWorkers()
-	wp.Metrics().IdleWorkers()
-	wp.Metrics().MinWorkers()
-	wp.Metrics().MaxWorkers()
-	wp.Metrics().QueueCapacity()
-	wp.Metrics().SubmittedTasks()
-	wp.Metrics().WaitingTasks()
-	wp.Metrics().SuccessfulTasks()
-	wp.Metrics().FailedTasks()
-	wp.Metrics().CompletedTasks()
-	wp.Metrics().Snapshot()
-	wp.Metrics().String()
+   // Metrics
+   wp.Metrics().RunningWorkers()
+   wp.Metrics().IdleWorkers()
+   wp.Metrics().MinWorkers()
+   wp.Metrics().MaxWorkers()
+   wp.Metrics().QueueCapacity()
+   wp.Metrics().SubmittedTasks()
+   wp.Metrics().WaitingTasks()
+   wp.Metrics().SuccessfulTasks()
+   wp.Metrics().FailedTasks()
+   wp.Metrics().CompletedTasks()
+   wp.Metrics().Snapshot()
+   wp.Metrics().String()
 
-	// Settings
-	wp.MinWorkers()
-	wp.MaxWorkers()
-	wp.IdleTimeout()
-	wp.UpScaling()
-	wp.DownScaling()
-	wp.QueueCapacity()
-	wp.PanicHandler()
+   // Settings
+   wp.MinWorkers()
+   wp.MaxWorkers()
+   wp.IdleTimeout()
+   wp.UpScaling()
+   wp.DownScaling()
+   wp.QueueCapacity()
+   wp.PanicHandler()
 
-	wp.SetMinWorkers(0)
-	wp.SetMaxWorkers(1)
-	wp.SetIdleTimeout(15 * time.Second)
-	wp.SetUpScaling(1)
-	wp.SetDownScaling(1)
-	wp.SetPanicHandler(func(panicErr interface{}) {
-		fmt.Printf("Worker recovered from a panic: %v\nStack trace: %s\n", panicErr, string(debug.Stack()))
-	})
+   wp.SetMinWorkers(0)
+   wp.SetMaxWorkers(1)
+   wp.SetIdleTimeout(15 * time.Second)
+   wp.SetUpScaling(1)
+   wp.SetDownScaling(1)
+   wp.SetPanicHandler(func(panicErr interface{}) {
+      fmt.Printf("Worker recovered from a panic: %v\nStack trace: %s\n", panicErr, string(debug.Stack()))
+   })
 
-	wp.String()
+   wp.String()
 }
 ```
