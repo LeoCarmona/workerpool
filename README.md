@@ -101,3 +101,7 @@ func main() {
    wp.String()
 }
 ```
+
+## API Reference
+
+Full API reference is available at https://pkg.go.dev/github.com/leocarmona/workerpool
